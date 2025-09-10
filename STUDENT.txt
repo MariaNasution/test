@@ -1,0 +1,5 @@
+APP_URL=<url_aplikasi>
+MAP_SERVICE_API_KEY=<api_key>
+
+MAPS:
+Aplikasi menggunakan Leaflet dengan OpenStreetMap tiles sehingga TIDAK memerlukan API key. Jika menggunakan penyedia lain, tambahkan API key di sini.
