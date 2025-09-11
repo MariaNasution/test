@@ -1,4 +1,5 @@
 import { StoryModel } from '../models/storyModel';
+import NotificationHelper from '../utils/notification-helper';
 
 export class StoryAddPresenter {
   constructor(view) {
@@ -10,6 +11,10 @@ export class StoryAddPresenter {
     this.view.setLoading(true);
     try {
       await this.storyModel.addStory({ description, photoBlob, lat, lon });
+
+      // ✅ kasih notifikasi setelah berhasil
+      NotificationHelper.showNotification('Story berhasil ditambahkan 🎉');
+
       this.view.onSubmitSuccess();
     } catch (e) {
       this.view.showError(e.message);
