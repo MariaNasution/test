@@ -5,6 +5,7 @@ const ASSETS_TO_CACHE = [
   '/index.html',
   '/manifest.json',
   '/icons/icon-192.png',
+  '/favicon.png',
   '/icons/icon-512.png',
   // tambahkan file statis bundle JS/CSS Anda:
   '/bundle.js',
