@@ -1,4 +1,5 @@
 import { AuthModel } from "../models/authModel";
+import NotificationHelper from "../utils/notification-helper"; // ✅ helper notifikasi
 
 class Navigation {
   constructor() {
@@ -16,6 +17,7 @@ class Navigation {
             ? `
             <li><a href="#/stories">Stories</a></li>
             <li><a href="#/add">Tambah</a></li>
+            <li><a href="#/favorites">Favorites</a></li>
             <li><a href="#/about">Tentang</a></li>
             <li><a href="#/logout" id="logout-link">Keluar</a></li>
           `
@@ -24,6 +26,7 @@ class Navigation {
             <li><a href="#/about">Tentang</a></li>
           `
         }
+        <li><button id="subscribe-btn" class="nav-btn">🔔 Notifikasi</button></li>
       </ul>
     `;
   }
@@ -33,8 +36,16 @@ class Navigation {
     if (logoutLink) {
       logoutLink.addEventListener("click", (e) => {
         e.preventDefault();
-        this.auth.clear(); // ✅ sesuai dengan AuthModel
+        this.auth.clear();
         window.location.hash = "#/login";
+      });
+    }
+
+    // ✅ Handle tombol notifikasi
+    const subBtn = document.querySelector("#subscribe-btn");
+    if (subBtn) {
+      subBtn.addEventListener("click", () => {
+        NotificationHelper.requestPermission();
       });
     }
   }

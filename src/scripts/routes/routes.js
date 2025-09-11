@@ -1,16 +1,16 @@
 import HomePage from '../pages/home/home-page';
-import AboutPage from '../pages/about/about-page';
 import LoginPage from '../pages/login/login-page';
+import AboutPage from '../pages/about/about-page';
 import StoriesPage from '../pages/stories/stories-page';
-import AddPage from '../pages/add/add-page';
+import FavoritesPage from '../pages/favorites/favorites-page';
 
 const routes = {
-  '/': LoginPage,
-  '/login': LoginPage,
-  '/stories': StoriesPage,
-  '/add': AddPage,
-  '/about': AboutPage,
+  '/': HomePage,
   '/home': HomePage,
+  '/login': LoginPage,
+  '/about': AboutPage,
+  '/stories': StoriesPage,
+  '/favorites': FavoritesPage,
 };
 
 export default routes;

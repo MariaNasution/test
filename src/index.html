@@ -7,7 +7,7 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#2b6cb0">
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
-
+    <meta name="theme-color" content="#2196f3">
 
     <!-- Leaflet CSS -->
     <link
@@ -61,6 +61,16 @@
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
-    ></script>
+    >
+     if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then(reg => console.log('✅ ServiceWorker registered', reg))
+        .catch(err => console.error('❌ SW failed', err));
+    });
+  }
+  </script>
+    
   </body>
 </html>

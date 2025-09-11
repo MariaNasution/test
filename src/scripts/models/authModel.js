@@ -20,7 +20,7 @@ export class AuthModel {
   }
 
   /**
-   * Proses login (bisnis logic) dipindahkan ke sini
+   * Proses login (bisnis logic)
    * @param {string} email 
    * @param {string} password 
    * @returns {Promise<string>} token
@@ -32,7 +32,8 @@ export class AuthModel {
     this.saveToken(token);
     return token;
   }
-    async register({ name, email, password }) {
+
+  async register({ name, email, password }) {
     const response = await fetch('https://story-api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -42,5 +43,4 @@ export class AuthModel {
     if (!response.ok) throw new Error('REGISTER_FAILED');
     return await response.json();
   }
-
 }
