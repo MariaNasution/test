@@ -1,17 +1,18 @@
 const CACHE_NAME = 'app-shell-v1';
-const OFFLINE_URL = '/index.html'; // app shell entry
+const OFFLINE_URL = '/index.html';
+
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/manifest.json',
   '/icons/icon-192.png',
-  '/favicon.png',
   '/icons/icon-512.png',
-  // tambahkan file statis bundle JS/CSS Anda:
-  '/bundle.js',
-  '/styles.css'
+  // hasil build Webpack (lihat di dist/)
+  '/app.bundle.js'
+  // kalau nanti ada styles.css dari plugin CSS Extract, tambahkan di sini
 ];
 
+// Install Service Worker & cache assets
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -20,8 +21,8 @@ self.addEventListener('install', event => {
   );
 });
 
+// Activate Service Worker & hapus cache lama
 self.addEventListener('activate', event => {
-  // hapus cache lama jika ada
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
@@ -31,55 +32,61 @@ self.addEventListener('activate', event => {
   );
 });
 
-// fetch strategy: cache-first for app shell, network-first for API calls
+// Fetch strategy
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // contoh: treat API calls as network-first (untuk data dinamis)
+  // Network-first untuk API
   if (url.pathname.startsWith('/api/') || url.hostname.includes('your-api-domain')) {
     event.respondWith(
       fetch(event.request)
-        .then(response => {
-          // optionally put into cache for offline read
-          return response;
-        })
+        .then(response => response)
         .catch(() => caches.match(event.request))
     );
     return;
   }
 
-  // default: cache-first
+  // Cache-first untuk asset lain
   event.respondWith(
-    caches.match(event.request).then(resp => resp || fetch(event.request).catch(() => caches.match(OFFLINE_URL)))
+    caches.match(event.request).then(resp =>
+      resp || fetch(event.request).catch(() => caches.match(OFFLINE_URL))
+    )
   );
 });
 
-// Push event
+// Push Notification event
 self.addEventListener('push', event => {
   let payload = { title: 'Notifikasi', body: 'Ada update', url: '/' };
   try {
     if (event.data) payload = event.data.json();
   } catch (e) {}
+
   const options = {
     body: payload.body,
     icon: '/icons/icon-192.png',
     badge: '/icons/icon-192.png',
     data: { url: payload.url }
   };
-  event.waitUntil(self.registration.showNotification(payload.title, options));
+
+  event.waitUntil(
+    self.registration.showNotification(payload.title, options)
+  );
 });
 
-// Notification click
+// Notification click handler
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   const url = event.notification.data?.url || '/';
   event.waitUntil(
     clients.matchAll({ type: 'window' }).then(windowClients => {
       for (const client of windowClients) {
-        if (client.url === url && 'focus' in client) return client.focus();
+        if (client.url === url && 'focus' in client) {
+          return client.focus();
+        }
       }
-      if (clients.openWindow) return clients.openWindow(url);
+      if (clients.openWindow) {
+        return clients.openWindow(url);
+      }
     })
   );
 });
-  
